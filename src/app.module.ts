@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { Meal } from './meals/Meals.Entity';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { ConfigModule } from '@nestjs/config';
       url: process.env.DB_CONNECT_URL,
       autoLoadEntities: true,
       synchronize: true,
+      entities: [Meal],
     }),
   ],
   controllers: [AppController],
