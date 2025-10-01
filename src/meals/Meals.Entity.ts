@@ -5,7 +5,7 @@ import { MealTypes } from './Types';
 export class Meal {
   @PrimaryGeneratedColumn()
   id: number;
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', unique: true })
   name: string;
   @Column({ type: 'decimal', default: 0.0 })
   price: number;
