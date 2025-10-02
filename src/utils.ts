@@ -16,6 +16,8 @@ export class JWT_Payload {
   email: string;
   phonenumber: string;
   location: string;
+  isemployee: boolean;
+  employeetype: string;
 }
 
 export const CURRENT_USER_KEY = 'user';

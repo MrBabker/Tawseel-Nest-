@@ -6,6 +6,7 @@ import { BadRequestException } from '@nestjs/common';
 import bcrypt from 'node_modules/bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { JWT_Payload } from 'src/utils';
+import { LoginUserDTO } from './DTOs/LoginUser.DTO';
 
 export class UsersService {
   constructor(
@@ -39,6 +40,8 @@ export class UsersService {
         email: newuser.email,
         phonenumber: newuser.phonenumber,
         location: newuser.location,
+        employeetype: newuser.employeetype,
+        isemployee: newuser.isemployee,
       };
 
       const access_token = await this.jwtService.signAsync(payload);
@@ -47,5 +50,35 @@ export class UsersService {
     } catch (error: unknown) {
       throw new BadRequestException(error);
     }
+  }
+
+  public async loginUser(loginDTO: LoginUserDTO) {
+    const user = await this.userrepo.findOne({
+      where: { email: loginDTO.email },
+    });
+    if (user === null)
+      throw new BadRequestException('invalid password or email');
+
+    const validPassword = bcrypt.compareSync(loginDTO.password, user.password);
+    if (!validPassword)
+      throw new BadRequestException('invalid password or email');
+
+    const payload: JWT_Payload = {
+      id: user.id,
+      username: user.usernmae,
+      email: user.email,
+      phonenumber: user.phonenumber,
+      location: user.location,
+      employeetype: user.employeetype,
+      isemployee: user.isemployee,
+    };
+
+    const access_token = await this.jwtService.signAsync(payload);
+
+    return access_token;
+  }
+
+  public async getCurrentUser(id: number) {
+    return this.userrepo.findOne({ where: { id: id } });
   }
 }
