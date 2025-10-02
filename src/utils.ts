@@ -17,3 +17,5 @@ export class JWT_Payload {
   phonenumber: string;
   location: string;
 }
+
+export const CURRENT_USER_KEY = 'user';

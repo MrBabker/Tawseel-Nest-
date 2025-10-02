@@ -6,7 +6,6 @@ import { BadRequestException } from '@nestjs/common';
 import bcrypt from 'node_modules/bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { JWT_Payload } from 'src/utils';
-import type { Response } from 'express';
 
 export class UsersService {
   constructor(
@@ -46,7 +45,7 @@ export class UsersService {
 
       return access_token;
     } catch (error: unknown) {
-      return { message: error };
+      throw new BadRequestException(error);
     }
   }
 }
