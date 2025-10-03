@@ -6,6 +6,12 @@ import cookieParser from 'cookie-parser';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.enableCors({
+    origin: 'http://localhost:3000', // سمح لـ localhost:3000
+    methods: 'GET,HEAD,POST,PUT,DELETE,OPTIONS', // الطرق المسموحة
+    credentials: true, // مهم عشان الكوكيات
+  });
+
   const config = new DocumentBuilder()
 
     .setVersion('1.0')

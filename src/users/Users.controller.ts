@@ -28,7 +28,7 @@ export class UsersController {
   constructor(
     @InjectRepository(User) private readonly userrepo: Repository<User>,
     private readonly usersservices: UsersService,
-  ) {}
+  ) { }
 
   @Post('reg')
   public async CreateNewUser(
@@ -60,7 +60,7 @@ export class UsersController {
       maxAge: 1000 * 60 * 60 * 24,
     });
 
-    return { message: 'User created successfully' };
+    return { message: 'User logged successfully' };
   }
 
   @Get('cur')
