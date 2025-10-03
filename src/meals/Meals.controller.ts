@@ -6,6 +6,7 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { MealsServices } from './Meals.Service';
@@ -26,8 +27,12 @@ export class MealsController {
   ) {}
 
   @Get()
-  public async GetAllMeals() {
-    return await this.mealsServices.getAllMeals();
+  public async GetAllMeals(
+    @Query('name') name: string,
+    @Query('minp') minp: string,
+    @Query('maxp') maxp: string,
+  ) {
+    return await this.mealsServices.getAllMeals(name, minp, maxp);
   }
 
   @Post('create')

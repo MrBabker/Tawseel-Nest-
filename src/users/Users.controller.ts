@@ -1,5 +1,6 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Get,
   Headers,
@@ -19,6 +20,8 @@ import { JWT_Payload } from 'src/utils';
 import { AuthUserCookieGuard } from './gaurds/AuthUser.guard';
 import { LoginUserDTO } from './DTOs/LoginUser.DTO';
 import { LoggerInterceptor } from 'src/interceptors/Logging.interceptor';
+import { SearchUserDTO } from './DTOs/SearchUser.DTO';
+import { AuthUserAdminCookieGuard } from './gaurds/AuthUserAdmin.guard';
 
 @Controller('users')
 export class UsersController {
@@ -65,5 +68,12 @@ export class UsersController {
   @UseInterceptors(LoggerInterceptor)
   public GetCurrntUser(@PayloadParamDecorator() payload: JWT_Payload) {
     return this.usersservices.getCurrentUser(payload.id);
+  }
+
+  @Post('all-users')
+  @UseGuards(AuthUserAdminCookieGuard)
+  @UseInterceptors(ClassSerializerInterceptor)
+  public GetAllUsers(@Body() searchUserDTO: SearchUserDTO) {
+    return this.usersservices.getAllUsers(searchUserDTO);
   }
 }

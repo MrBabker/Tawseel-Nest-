@@ -1,4 +1,9 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
@@ -18,11 +23,18 @@ export class AuthUserCookieGuard implements CanActivate {
     const token = cookies.jwt;
 
     if (token) {
-      const payload: JWT_Payload = await this.jwtService.verifyAsync(token, {
-        secret: this.config.get<string>('JWT_SECRET'),
-      });
+      try {
+        const payload: JWT_Payload = await this.jwtService.verifyAsync(token, {
+          secret: this.config.get<string>('JWT_SECRET'),
+        });
 
-      request[CURRENT_USER_KEY] = payload;
+        request[CURRENT_USER_KEY] = payload;
+      } catch (error: any) {
+        throw new UnauthorizedException({
+          message: error + ' : you need to login again',
+        });
+        return false;
+      }
     } else {
       //throw new UnauthorizedException('no token');
       return false;

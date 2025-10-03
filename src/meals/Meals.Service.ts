@@ -3,7 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { Between, ILike, Repository } from 'typeorm';
 import { Meal } from './Meals.Entity';
 import { CreateNewMealDTO } from './DTOs/CreateMeal.DTO';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -16,8 +16,16 @@ export class MealsServices {
   ) {}
 
   // Get all Meals
-  public async getAllMeals() {
-    return this.mealrepo.find();
+  public async getAllMeals(name?: string, minp?: string, maxp?: string) {
+    const filter = {
+      ...(name ? { name: ILike(`%${name}%`) } : {}),
+      ...(minp ? { price: Between(parseInt(minp), Infinity) } : {}),
+      ...(maxp
+        ? { price: Between(parseInt(minp || '0'), parseInt(maxp)) }
+        : {}),
+    };
+
+    return this.mealrepo.find({ where: filter });
   }
 
   // Add new Meal

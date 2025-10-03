@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { User } from './Users.entites';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDTO } from './DTOs/CreateUser.DTO';
@@ -7,6 +7,7 @@ import bcrypt from 'node_modules/bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { JWT_Payload } from 'src/utils';
 import { LoginUserDTO } from './DTOs/LoginUser.DTO';
+import { SearchUserDTO } from './DTOs/SearchUser.DTO';
 
 export class UsersService {
   constructor(
@@ -76,6 +77,34 @@ export class UsersService {
     const access_token = await this.jwtService.signAsync(payload);
 
     return access_token;
+  }
+
+  public getAllUsers(searchUserDTO: SearchUserDTO) {
+    const filter = {
+      ...(searchUserDTO.email
+        ? { email: ILike(`%${searchUserDTO.email}%`) }
+        : {}),
+      ...(searchUserDTO.employeetype
+        ? { employeetype: ILike(`%${searchUserDTO.employeetype}%`) }
+        : {}),
+      ...(searchUserDTO.id ? { id: searchUserDTO.id } : {}),
+      ...(searchUserDTO.isemployee
+        ? { isemployee: searchUserDTO.isemployee }
+        : {}),
+      ...(searchUserDTO.isvalidate
+        ? { isvalidate: searchUserDTO.isvalidate }
+        : {}),
+      ...(searchUserDTO.location
+        ? { location: ILike(`%${searchUserDTO.location}%`) }
+        : {}),
+      ...(searchUserDTO.phonenumber
+        ? { phonenumber: ILike(`%${searchUserDTO.phonenumber}%`) }
+        : {}),
+      ...(searchUserDTO.usernmae
+        ? { usernmae: ILike(`%${searchUserDTO.usernmae}%`) }
+        : {}),
+    };
+    return this.userrepo.find({ where: filter });
   }
 
   public async getCurrentUser(id: number) {

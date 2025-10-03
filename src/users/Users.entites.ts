@@ -1,5 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { UserType } from '../utils';
+import { Exclude } from 'class-transformer';
 
 @Entity('users')
 export class User {
@@ -12,6 +13,7 @@ export class User {
   @Column({ type: 'varchar', unique: true })
   email: string;
 
+  @Exclude()
   @Column({ type: 'varchar' })
   password: string;
 
@@ -28,5 +30,5 @@ export class User {
   employeetype: string;
 
   @Column({ type: 'boolean', default: false })
-  isvalidate: string;
+  isvalidate: boolean;
 }
