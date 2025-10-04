@@ -21,3 +21,5 @@ export class JWT_Payload {
 }
 
 export const CURRENT_USER_KEY = 'user';
+
+export const DOMAIN = 'http://localhost:5000';

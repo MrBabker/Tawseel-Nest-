@@ -63,6 +63,18 @@ export class UsersController {
     return { message: 'User logged successfully' };
   }
 
+  @Post('out')
+  public LogOut(@Res({ passthrough: true }) res: Response) {
+    res.clearCookie('jwt', {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+      expires: new Date(0),
+    });
+
+    return { message: 'User logged out successfully' };
+  }
+
   @Get('cur')
   @UseGuards(AuthUserCookieGuard)
   @UseInterceptors(LoggerInterceptor)

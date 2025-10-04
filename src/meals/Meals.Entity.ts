@@ -10,7 +10,7 @@ export class Meal {
   @Column({ type: 'decimal', default: 0.0 })
   price: number;
   @Column({ type: 'varchar', nullable: true })
-  image: string;
+  image: string | null;
   @Column({ type: 'varchar', default: MealTypes.Additions })
   type: string;
 }
