@@ -4,6 +4,8 @@ import {
   Controller,
   Get,
   Headers,
+  Param,
+  ParseIntPipe,
   Post,
   Res,
   UseGuards,
@@ -22,13 +24,15 @@ import { LoginUserDTO } from './DTOs/LoginUser.DTO';
 import { LoggerInterceptor } from 'src/interceptors/Logging.interceptor';
 import { SearchUserDTO } from './DTOs/SearchUser.DTO';
 import { AuthUserAdminCookieGuard } from './gaurds/AuthUserAdmin.guard';
+import { ResetPassDTO } from './DTOs/ResetPasswordDTO';
+import { ResetPassInfoDTO } from './DTOs/ResetPassInfoDTO';
 
 @Controller('users')
 export class UsersController {
   constructor(
     @InjectRepository(User) private readonly userrepo: Repository<User>,
     private readonly usersservices: UsersService,
-  ) { }
+  ) {}
 
   @Post('reg')
   public async CreateNewUser(
@@ -52,6 +56,12 @@ export class UsersController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const access_token = await this.usersservices.loginUser(loginUser);
+
+    if (access_token === false)
+      return {
+        message:
+          'We have sent virfcation url to your email , please click in the url to virfy your email',
+      };
 
     res.cookie('jwt', access_token, {
       httpOnly: true,
@@ -87,5 +97,23 @@ export class UsersController {
   @UseInterceptors(ClassSerializerInterceptor)
   public GetAllUsers(@Body() searchUserDTO: SearchUserDTO) {
     return this.usersservices.getAllUsers(searchUserDTO);
+  }
+
+  @Get('verify-email/:id/:token')
+  public VerifyUser(
+    @Param('id', ParseIntPipe) id: number,
+    @Param('token') token: string,
+  ) {
+    return this.usersservices.verifyUser(id, token);
+  }
+
+  /** reset the password */
+  @Post('resetpass')
+  public SendResetPasswordLink(@Body() resetpassDTO: ResetPassDTO) {
+    return this.usersservices.sendResetPasswordLink(resetpassDTO);
+  }
+  @Post('resetedpass')
+  public ResetPassword(@Body() resetpassinfoDTO: ResetPassInfoDTO) {
+    return this.usersservices.resetThePassword(resetpassinfoDTO);
   }
 }

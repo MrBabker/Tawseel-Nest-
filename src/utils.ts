@@ -1,3 +1,5 @@
+export const CURRENT_TIMESTAMP = 'CURRENT_TIMESTAMP(6)';
+
 export enum UserType {
   normal = 'normal',
   admin = 'admin',
@@ -8,6 +10,11 @@ export enum MealTypes {
   Meals = 'meals',
   Drinks = 'drinks',
   Additions = 'Additions',
+}
+
+export enum CartTypes {
+  buy = 'buy',
+  return = 'return',
 }
 
 export class JWT_Payload {

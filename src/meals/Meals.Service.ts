@@ -10,12 +10,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UpdateMealDTO } from './DTOs/UpdateMeal.DTO';
 import { join } from 'node:path';
 import { unlinkSync } from 'node:fs';
-import { DOMAIN } from 'src/utils';
 @Injectable()
 export class MealsServices {
   public constructor(
     @InjectRepository(Meal) private readonly mealrepo: Repository<Meal>,
-  ) { }
+  ) {}
 
   // Get all Meals
   public async getAllMeals(name?: string, minp?: string, maxp?: string) {

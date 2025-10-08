@@ -24,7 +24,6 @@ import { JwtService } from '@nestjs/jwt';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import type { Response } from 'express';
-import { DOMAIN } from 'src/utils';
 
 @Controller('api/meals')
 export class MealsController {
@@ -32,7 +31,7 @@ export class MealsController {
     private readonly mealsServices: MealsServices,
     private readonly jwtService: JwtService,
     @InjectRepository(Meal) private readonly mealrepo: Repository<Meal>,
-  ) { }
+  ) {}
 
   @Get()
   public async GetAllMeals(

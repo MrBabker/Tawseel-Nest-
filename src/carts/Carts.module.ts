@@ -1,15 +1,16 @@
 import { Module } from '@nestjs/common';
-import { MealsController } from './Meals.controller';
-import { MealsServices } from './Meals.Service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Meal } from './Meals.Entity';
+import { Cart } from './Carts.entity';
+import { Cartitem } from 'src/cartItems/Cartitem.entity';
+import { CartsServics } from './Carts.service';
+import { CartsController } from './Carts.controller';
+import { User } from 'src/users/Users.entites';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { Cartitem } from 'src/cartItems/Cartitem.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Meal, Cartitem]),
+    TypeOrmModule.forFeature([Cart, Cartitem, User]),
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: (conig: ConfigService) => {
@@ -21,7 +22,7 @@ import { Cartitem } from 'src/cartItems/Cartitem.entity';
       },
     }),
   ],
-  providers: [MealsServices],
-  controllers: [MealsController],
+  controllers: [CartsController],
+  providers: [CartsServics],
 })
-export class MealsModlue {}
+export class CartsModule {}
